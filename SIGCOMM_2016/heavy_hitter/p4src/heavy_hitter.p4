@@ -11,6 +11,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+
+
+ 
+ *a)simple_router.p4定义的数据面中包换两条pipeline：ingress和egress。
+ *b)ingress中有两级match-action，分别为ipv4_lpm和forward表。
+ *c)egress中有一级match-action，send_frame表。
+ *d)ipv4_lpm table中通过对下一跳IPv4地址(nhop_ipv4)进行最长前缀匹配(lpm)后修改下一跳地址(nhop_ipv4)或修改出端口(egress_port)。
+ *e)forward table中通过对下一跳IPv4地址(nhop_ipv4)进行精确匹配(exact)后可以修改以太网帧的目的mac(dstAddr)或者将包丢弃(drop)。
+ *f)send_frame table中通过对egress_port进行精确匹配后修改源mac地址(srcAddr)或将包丢弃。
  */
 
 #include "includes/headers.p4"
@@ -56,7 +65,7 @@ header_type custom_metadata_t {
 metadata custom_metadata_t custom_metadata;
 
 action set_nhop(nhop_ipv4, port) {
-    modify_field(custom_metadata.nhop_ipv4, nhop_ipv4);
+    modify_field(custom_metadata.nhop_ipv4, nhop_ipv4); //修改解析后表示中的包头字段值
     modify_field(standard_metadata.egress_spec, port);
     add_to_field(ipv4.ttl, -1);
 }

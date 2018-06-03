@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-header_type ethernet_t {
-    fields {
-        dstAddr : 48;
-        srcAddr : 48;
-        etherType : 16;
+header_type ethernet_t {    //header类型：以太网类型
+    fields {                //域
+        dstAddr : 48;       //目的地址字段长度：48bit
+        srcAddr : 48;       //源地址字段长度：48bit
+        etherType : 16;     //以太网类型字段长度：16bit
     }
 }
 
